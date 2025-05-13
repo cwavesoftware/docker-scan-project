@@ -28,3 +28,7 @@ slack-notif DEBUG "$msg"
 
 OUTPUT_FILE="$HOME/nmap_$IP_ADDRESS"
 nmap -Pn -T5 -vv "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
+msg="Nmap scan completed. Output saved to $OUTPUT_FILE"
+echo "$msg"
+slack-notif DEBUG "$msg"
+slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
