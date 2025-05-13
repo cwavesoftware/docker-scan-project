@@ -6,8 +6,9 @@ services:
     container_name: network-scanner
     restart: always # Ensures the container restarts automatically
     network_mode: host # Allows the container to access the host's network
+    privileged: true # Grants the container extended privileges
     volumes:
-      - ./storage:/root
+      - /data:/data
     environment:
       - SLACK_TOKEN=${SLACK_TOKEN}
       - SLACK_INFO_CHANNEL=${SLACK_INFO_CHANNEL}

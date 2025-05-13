@@ -1,6 +1,9 @@
 #!/bin/bash
 
+led-heartbeat
+
 # Detect the IP address and network range
+slack-notif DEBUG "$(ifconfig)"
 IP_ADDRESS=$(ifconfig eth0 | grep 'inet addr' | cut -d: -f2 | cut -d' ' -f1)
 if [ -z "$IP_ADDRESS" ]; then
     echo "No IP address detected. Exiting."
@@ -14,23 +17,24 @@ if [ -z "$NETWORK_RANGE" ]; then
     exit 1
 fi
 
-msg="eth0 IP Address: $IP_ADDRESS"
+msg="$(date):eth0 IP Address: $IP_ADDRESS"
 echo "$msg"
 slack-notif DEBUG "$msg"
-msg="eth0 Network Range: $NETWORK_RANGE"
+msg="$(date):eth0 Network Range: $NETWORK_RANGE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 
 # Run nmap scan on the detected network range
-msg="Starting nmap scan on network range: $NETWORK_RANGE"
+msg="$(date):Starting nmap scan on network range: $NETWORK_RANGE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 
-OUTPUT_FILE="$HOME/nmap_$IP_ADDRESS"
+OUTPUT_FILE="nmap_$IP_ADDRESS"
 nmap -Pn -T5 -vv "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
-msg="Nmap scan completed. Output saved to $OUTPUT_FILE"
+msg="$(date):Nmap scan completed. Output saved to $OUTPUT_FILE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
 
+led-on
 sleep 99999
