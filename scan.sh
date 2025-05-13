@@ -14,11 +14,17 @@ if [ -z "$NETWORK_RANGE" ]; then
     exit 1
 fi
 
-echo "Detected IP Address: $IP_ADDRESS"
-echo "Detected Network Range: $NETWORK_RANGE"
+msg="Detected IP Address: $IP_ADDRESS"
+echo "$msg"
+slack-notif DEBUG "$msg"
+msg="Detected Network Range: $NETWORK_RANGE"
+echo "$msg"
+slack-notif DEBUG "$msg"
 
 # Run nmap scan on the detected network range
-echo "Starting nmap scan on network range: $NETWORK_RANGE"
+msg="Starting nmap scan on network range: $NETWORK_RANGE"
+echo "$msg"
+slack-notif DEBUG "$msg"
+
 OUTPUT_FILE="$HOME/nmap_$IP_ADDRESS"
 nmap -Pn -T5 -vv "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
-
