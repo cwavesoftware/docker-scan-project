@@ -1,0 +1,8 @@
+services:
+  scanner:
+    build: .
+    container_name: network-scanner
+    restart: always # Ensures the container restarts automatically
+    network_mode: host # Allows the container to access the host's network
+    volumes:
+      - ./storage:/root
