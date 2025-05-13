@@ -8,7 +8,7 @@ services:
     network_mode: host # Allows the container to access the host's network
     privileged: true # Grants the container extended privileges
     volumes:
-      - /data:/data
+      - /boot/firmware/storage:/data
     environment:
       - SLACK_TOKEN=${SLACK_TOKEN}
       - SLACK_INFO_CHANNEL=${SLACK_INFO_CHANNEL}

@@ -37,4 +37,6 @@ slack-notif DEBUG "$msg"
 slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
 
 led-on
-sleep 99999
+while true; do
+    sleep 1
+done

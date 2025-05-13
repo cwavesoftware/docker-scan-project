@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache nmap bash curl jq
+RUN apk add --no-cache nmap bash curl jq sudo
 
 COPY scan.sh /usr/local/bin/scan.sh
 
