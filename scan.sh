@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Detect the IP address and network range
-IP_ADDRESS=$(hostname -i | awk '{print $1}')
+IP_ADDRESS=$(ifconfig eth0 | grep 'inet addr' | cut -d: -f2 | cut -d' ' -f1)
 if [ -z "$IP_ADDRESS" ]; then
     echo "No IP address detected. Exiting."
     exit 1
 fi
 
 # Extract the network range (CIDR notation)
-NETWORK_RANGE=$(ip -o -f inet addr show | awk '/scope global/ {print $4}' | head -n 1)
+NETWORK_RANGE=$(ip -o -f inet addr show | awk '/eth0/ {print $4}' | head -n 1)
 if [ -z "$NETWORK_RANGE" ]; then
     echo "Unable to determine network range. Exiting."
     exit 1
 fi
 
-msg="Detected IP Address: $IP_ADDRESS"
+msg="eth0 IP Address: $IP_ADDRESS"
 echo "$msg"
 slack-notif DEBUG "$msg"
-msg="Detected Network Range: $NETWORK_RANGE"
+msg="eth0 Network Range: $NETWORK_RANGE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 
@@ -32,3 +32,5 @@ msg="Nmap scan completed. Output saved to $OUTPUT_FILE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
+
+sleep 99999
