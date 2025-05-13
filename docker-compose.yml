@@ -1,6 +1,8 @@
 services:
   scanner:
     build: .
+    image: cwavesoftware/docker-scan-project:latest
+    platform: linux/arm/v7 # Ensures compatibility with ARM architecture
     container_name: network-scanner
     restart: always # Ensures the container restarts automatically
     network_mode: host # Allows the container to access the host's network
