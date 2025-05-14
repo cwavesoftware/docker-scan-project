@@ -35,7 +35,7 @@ echo "$msg"
 slack-notif DEBUG "$msg"
 
 OUTPUT_FILE="nmap_$(echo $NETWORK_RANGE | sed 's/\//_/g')_$(date +%Y%m%d%H%M%S)"
-nmap -Pn -T5 -vv -p- "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
+nmap -Pn -T5 -A -vv -p- "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
 msg="$(date):Nmap scan completed. Output saved to $OUTPUT_FILE"
 echo "$msg"
 slack-notif DEBUG "$msg"
