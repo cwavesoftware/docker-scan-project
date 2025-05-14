@@ -1,6 +1,11 @@
 #!/bin/bash
 
 led-heartbeat
+# Source the .env file
+if [ -f .env ]; then
+    source .env
+fi
+NMAP_OUT_TO_SLACK=${NMAP_OUT_TO_SLACK:-true}
 
 # Detect the IP address and network range
 slack-notif DEBUG "$(ifconfig)"
@@ -29,14 +34,23 @@ msg="$(date):Starting nmap scan on network range: $NETWORK_RANGE"
 echo "$msg"
 slack-notif DEBUG "$msg"
 
-OUTPUT_FILE="nmap_$IP_ADDRESS"
-nmap -Pn -T5 -vv "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
+OUTPUT_FILE="nmap_$(echo $NETWORK_RANGE | sed 's/\//_/g')_$(date +%Y%m%d%H%M%S)"
+nmap -Pn -T5 -vv -p- "$NETWORK_RANGE" -oA "$OUTPUT_FILE"
 msg="$(date):Nmap scan completed. Output saved to $OUTPUT_FILE"
 echo "$msg"
 slack-notif DEBUG "$msg"
-slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
+if [ "$NMAP_OUT_TO_SLACK" == true ]; then
+    msg="$(date):Sending nmap output to Slack"
+    echo "$msg"
+    slack-notif DEBUG "$msg"
+    slack-notif DEBUG "$(cat $OUTPUT_FILE.nmap)"
+else
+    msg="$(date):Nmap output not sent to Slack as NMAP_OUT_TO_SLACK is set to false."
+    echo "$msg"
+    slack-notif DEBUG "$msg"
+fi
 
-led-on
+led-off
 while true; do
     sleep 1
 done
